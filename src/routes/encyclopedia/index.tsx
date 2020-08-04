@@ -20,15 +20,7 @@ export default function Encyclopedia(props: any) {
 
   useEffect(() => {
     const query: string = API + (!hasParam ? 'sheets' : `sheet?name=${params.get("name")}`);
-    const config: any = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
-    };
     Axios.get(query).then((response: AxiosResponse) => {
-      console.log(response.data)
       setData(response.data);
     });
   }, [props]);

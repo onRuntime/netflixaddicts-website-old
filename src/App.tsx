@@ -11,7 +11,6 @@ const NotFound = lazy(() => import('./routes/not-found'));
 
 function App() {
     return (
-
         <Router>
             <Layout>
                 <Suspense fallback={<div>Loading...</div>}>

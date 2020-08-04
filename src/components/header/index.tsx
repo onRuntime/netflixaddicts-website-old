@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './styles.css';
+import './styles.scss';
 
 export const Header = () => {
     return (
@@ -13,7 +13,7 @@ export const Header = () => {
                         <div className="col-md-11">
                             <nav className="navbar navbar-expand-lg navbar-light">
                                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMain"
-                                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                                    aria-controls="navbarMain" aria-expanded="true" aria-label="Toggle navigation">
                                     <span className="navbar-toggler-icon"></span>
                                 </button>
 
