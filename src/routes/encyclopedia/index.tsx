@@ -1,27 +1,50 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import Axios, { AxiosResponse } from 'axios';
 
-export default class Encyclopedia extends Component<{}, { sheets: string }> {
+import { SheetInfo, Poster } from '../../components';
+import { Sheet } from '../../interfaces';
 
-    constructor(props: any) {
-        super(props);
-        this.setState({
-            sheets: 'Loading data...'
-        })
-    }
+const API: string = 'https://localhost:8000/api/';
 
-    componentDidMount() {
-        Axios.get('https://localhost:8000/api/sheets').then((response: AxiosResponse) => {
-            this.setState({
-                sheets: response.data,
-            });
-        });
-    }
+function useParams() {
+  return new URLSearchParams(useLocation().search);
+}
 
-    render() {
-        return (
-            <div id="sheet-list">{this.state.sheets}</div>
-        );
-    }
+export default function Encyclopedia(props: any) {
+  const [data, setData] = useState<Sheet[]>();
+  const params = useParams();
+
+  const hasParam = params.has("name");
+
+  useEffect(() => {
+    const query: string = API + (!hasParam ? 'sheets' : `sheet?name=${params.get("name")}`);
+    const config: any = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    };
+    Axios.get(query).then((response: AxiosResponse) => {
+      console.log(response.data)
+      setData(response.data);
+    });
+  }, [props]);
+
+  return (
+    <>
+      {
+        data
+          ? (!hasParam
+            ? data.map((sheet: Sheet, i: number) =>
+              <Poster key={i} sheetList={JSON.stringify(sheet)} />
+            )
+            : <SheetInfo sheet={JSON.stringify(data)} />
+          )
+          : <div className="error"></div>
+      }
+    </>
+  );
 }
