@@ -1,42 +1,46 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { FC, useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet';
 
-import Axios, { AxiosResponse } from 'axios';
-
-import { SheetInfo, Poster } from '../../components';
+import { Poster } from '../../components';
 import { Sheet } from '../../interfaces';
 
-const API: string = 'https://localhost:8000/api/';
-
-function useParams() {
-  return new URLSearchParams(useLocation().search);
-}
-
-export default function Encyclopedia(props: any) {
-  const [data, setData] = useState<Sheet[]>();
-  const params = useParams();
-
-  const hasParam = params.has("name");
+const Encyclopedia: FC = (props) => {
+  const [sheets, setSheets] = useState<Sheet[]>();
 
   useEffect(() => {
-    const query: string = API + (!hasParam ? 'sheets' : `sheet?name=${params.get("name")}`);
-    Axios.get(query).then((response: AxiosResponse) => {
-      setData(response.data);
-    });
+    /*getSheets().then((sheets: Sheet[]) => {
+      setSheets(sheets);
+    })*/
   }, [props]);
 
   return (
     <>
-      {
-        data
-          ? (!hasParam
-            ? data.map((sheet: Sheet, i: number) =>
-              <Poster key={i} sheetList={JSON.stringify(sheet)} />
-            )
-            : <SheetInfo sheet={JSON.stringify(data)} />
-          )
-          : <div className="error"></div>
-      }
+      <Helmet>
+        <title>{process.env.REACT_APP_BASE_TITLE} - Encyclopédie</title>
+      </Helmet>
+
+      <div className="container encyclopedia">
+        <div className="search-box row">
+          <div className="search-text col-md-6">
+            <div className="search-icon left">
+              <img src="" alt=""></img>
+            </div>
+          </div>
+          <div className="search-filter col-md-6">
+            <div className="search-icon right">
+              <img src="" alt=""></img>
+            </div>
+          </div>
+        </div>
+
+        {
+          sheets
+            ? sheets.map((sheet, i) => <Poster key={i} sheetList={JSON.stringify(sheet)} />)
+            : <div>Loading sheets...</div>
+        }
+      </div>
     </>
   );
 }
+
+export default Encyclopedia;
